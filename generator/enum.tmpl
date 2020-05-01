@@ -119,12 +119,10 @@ func {{.enum.Name}}Names() []string {
 }
 {{ end -}}
 
-var _{{.enum.Name}}Map = {{ mapify .enum }}
-
 // String implements the Stringer interface.
 func (x {{.enum.Name}}) String() string {
-	if str, ok := _{{.enum.Name}}Map[x]; ok {
-		return str
+	if x >= 0 && x < len(_{{.enum.Name}}Names) {
+		return _{{.enum.Name}}Names[x]
 	}
 	return fmt.Sprintf("{{.enum.Name}}(%d)", x)
 }
