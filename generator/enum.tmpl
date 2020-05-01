@@ -121,7 +121,7 @@ func {{.enum.Name}}Names() []string {
 
 // String implements the Stringer interface.
 func (x {{.enum.Name}}) String() string {
-	if x >= 0 && x < len(_{{.enum.Name}}Names) {
+	if x >= 0 && int(x) < len(_{{.enum.Name}}Names) {
 		return _{{.enum.Name}}Names[x]
 	}
 	return fmt.Sprintf("{{.enum.Name}}(%d)", x)
