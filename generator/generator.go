@@ -37,6 +37,7 @@ type Generator struct {
 	sql             bool
 	flag            bool
 	names           bool
+	needStringerMap bool
 	leaveSnakeCase  bool
 	prefix          string
 }
@@ -177,13 +178,14 @@ func (g *Generator) Generate(f *ast.File) ([]byte, error) {
 		}
 
 		data := map[string]interface{}{
-			"enum":      enum,
-			"name":      name,
-			"lowercase": g.lowercaseLookup,
-			"marshal":   g.marshal,
-			"sql":       g.sql,
-			"flag":      g.flag,
-			"names":     g.names,
+			"enum":            enum,
+			"name":            name,
+			"lowercase":       g.lowercaseLookup,
+			"marshal":         g.marshal,
+			"sql":             g.sql,
+			"flag":            g.flag,
+			"names":           g.names,
+			"needStringerMap": g.needStringerMap,
 		}
 
 		err = g.t.ExecuteTemplate(vBuff, "enum", data)
@@ -235,6 +237,8 @@ func (g *Generator) parseEnum(ts *ast.TypeSpec) (*Enum, error) {
 
 	values := strings.Split(strings.TrimSuffix(strings.TrimPrefix(enumDecl, `ENUM(`), `)`), `,`)
 	data := 0
+	minVal := 0
+	maxVal := 0
 	for _, value := range values {
 		var comment string
 
@@ -277,11 +281,17 @@ func (g *Generator) parseEnum(ts *ast.TypeSpec) (*Enum, error) {
 			}
 
 			ev := EnumValue{Name: name, RawName: rawName, PrefixedName: prefixedName, Value: data, Comment: comment}
+			if data < minVal {
+				minVal = data
+			}
+			if data > maxVal {
+				maxVal = data
+			}
 			enum.Values = append(enum.Values, ev)
 			data++
 		}
 	}
-
+	g.needStringerMap = minVal < 0 || maxVal >= len(enum.Values)
 	// fmt.Printf("###\nENUM: %+v\n###\n", enum)
 
 	return enum, nil
