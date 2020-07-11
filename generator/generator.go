@@ -9,6 +9,7 @@ import (
 	"go/parser"
 	"go/token"
 	"net/url"
+	"regexp"
 	"sort"
 	"strconv"
 	"strings"
@@ -44,10 +45,11 @@ type Generator struct {
 
 // Enum holds data for a discovered enum in the parsed source
 type Enum struct {
-	Name   string
-	Prefix string
-	Type   string
-	Values []EnumValue
+	Name      string
+	Prefix    string // prepended to values and constants
+	Namespace string // prepended only to constants
+	Type      string
+	Values    []EnumValue
 }
 
 // EnumValue holds the individual data for each enum value within the found enum.
@@ -233,9 +235,9 @@ func (g *Generator) parseEnum(ts *ast.TypeSpec) (*Enum, error) {
 		enum.Prefix = g.prefix + enum.Prefix
 	}
 
-	enumDecl := getEnumDeclFromComments(ts.Doc.List)
+	var values []string
+	values, enum.Namespace = getEnumDeclFromComments(ts.Doc.List)
 
-	values := strings.Split(strings.TrimSuffix(strings.TrimPrefix(enumDecl, `ENUM(`), `)`), `,`)
 	data := 0
 	minVal := 0
 	maxVal := 0
@@ -351,11 +353,18 @@ func snakeToCamelCase(value string) string {
 	return value
 }
 
+var EnumRegex *regexp.Regexp
+
+func init() {
+	EnumRegex = regexp.MustCompile("ENUM(?:(?:[[:space:]]+)([^[:space:](]+))?\\((.*)")
+}
+
 // getEnumDeclFromComments parses the array of comment strings and creates a single Enum Declaration statement
 // that is easier to deal with for the remainder of parsing.  It turns multi line declarations and makes a single
 // string declaration.
-func getEnumDeclFromComments(comments []*ast.Comment) string {
-	parts := []string{}
+// namespace is the optional non-whitespace string occurring between 'ENUM' and '('
+func getEnumDeclFromComments(comments []*ast.Comment) (parts []string, namespace string) {
+	parts = []string{}
 	store := false
 
 	lines := []string{}
@@ -378,13 +387,11 @@ func getEnumDeclFromComments(comments []*ast.Comment) string {
 				break
 			}
 		}
-		if strings.Contains(line, `ENUM(`) {
+		matches := EnumRegex.FindStringSubmatch(line)
+		if matches != nil {
 			enumParamLevel = 1
-			startIndex := strings.Index(line, `ENUM(`)
-			if startIndex >= 0 {
-				line = line[startIndex+len(`ENUM(`):]
-			}
-			paramLevel, trimmed := parseLinePart(line)
+			namespace = matches[1]
+			paramLevel, trimmed := parseLinePart(matches[2])
 			if trimmed != "" {
 				parts = append(parts, trimmed)
 			}
@@ -401,8 +408,7 @@ func getEnumDeclFromComments(comments []*ast.Comment) string {
 	if enumParamLevel > 0 {
 		fmt.Println("ENUM Parse error, there is a dangling '(' in your comment.")
 	}
-	joined := fmt.Sprintf("ENUM(%s)", strings.Join(parts, `,`))
-	return joined
+	return
 }
 
 func parseLinePart(line string) (paramLevel int, trimmed string) {
@@ -508,7 +514,7 @@ func isTypeSpecEnum(ts *ast.TypeSpec) bool {
 	isEnum := false
 	if ts.Doc != nil {
 		for _, comment := range ts.Doc.List {
-			if strings.Contains(comment.Text, `ENUM(`) {
+			if EnumRegex.MatchString(comment.Text) {
 				isEnum = true
 			}
 		}
