@@ -28,6 +28,9 @@ const (
 
 // Parse{{.enum.Name}} attempts to convert a string to a {{.enum.Name}}
 func Parse{{.enum.Name}}(name string) ({{.enum.Name}}, error) {
+        {{ if .desnakeOnParse -}}
+        name = strings.ReplaceAll(name, "_", "")
+        {{- end  }}
 	if x, ok := _{{.enum.Name}}Value[name]; ok {
 		return x, nil
 	}

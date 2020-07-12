@@ -22,6 +22,7 @@ type rootT struct {
 	Prefix         string   `cli:"prefix" usage:"Replaces the prefix with a user one."`
 	Names          bool     `cli:"names" usage:"Generates a 'Names() []string' function, and adds the possible enum values in the error response during parsing"`
 	LeaveSnakeCase bool     `cli:"nocamel" usage:"Removes the snake_case to CamelCase name changing"`
+	DesnakeOnParse bool     `cli:"desnakeonparse" usage:"Collapse snake_case -> snakecase before parsing enum values"`
 }
 
 func main() {
@@ -52,6 +53,9 @@ func main() {
 			}
 			if argv.LeaveSnakeCase {
 				g.WithoutSnakeToCamel()
+			}
+			if argv.DesnakeOnParse {
+				g.WithDesnakeOnParse()
 			}
 			if argv.Prefix != "" {
 				g.WithPrefix(argv.Prefix)

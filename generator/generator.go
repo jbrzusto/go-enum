@@ -40,6 +40,7 @@ type Generator struct {
 	names           bool
 	needStringerMap bool
 	leaveSnakeCase  bool
+	desnakeOnParse  bool
 	prefix          string
 }
 
@@ -131,6 +132,12 @@ func (g *Generator) WithoutSnakeToCamel() *Generator {
 	return g
 }
 
+// WithDesnakeOnParse is used to add flag methods to the enum
+func (g *Generator) WithDesnakeOnParse() *Generator {
+	g.desnakeOnParse = true
+	return g
+}
+
 // WithPrefix is used to add a custom prefix to the enum constants
 func (g *Generator) WithPrefix(prefix string) *Generator {
 	g.prefix = prefix
@@ -188,6 +195,7 @@ func (g *Generator) Generate(f *ast.File) ([]byte, error) {
 			"flag":            g.flag,
 			"names":           g.names,
 			"needStringerMap": g.needStringerMap,
+			"desnakeOnParse":  g.desnakeOnParse,
 		}
 
 		err = g.t.ExecuteTemplate(vBuff, "enum", data)
