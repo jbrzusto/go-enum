@@ -23,6 +23,7 @@ type rootT struct {
 	Names          bool     `cli:"names" usage:"Generates a 'Names() []string' function, and adds the possible enum values in the error response during parsing"`
 	LeaveSnakeCase bool     `cli:"nocamel" usage:"Removes the snake_case to CamelCase name changing"`
 	DesnakeOnParse bool     `cli:"desnakeonparse" usage:"Collapse snake_case -> snakecase before parsing enum values"`
+	EmptyIsZero    bool     `cli:"emptyiszero" usage:"Parse empty string as value 0"`
 }
 
 func main() {
@@ -56,6 +57,9 @@ func main() {
 			}
 			if argv.DesnakeOnParse {
 				g.WithDesnakeOnParse()
+			}
+			if argv.EmptyIsZero {
+				g.WithEmptyIsZero()
 			}
 			if argv.Prefix != "" {
 				g.WithPrefix(argv.Prefix)

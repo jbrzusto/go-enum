@@ -31,6 +31,11 @@ func Parse{{.enum.Name}}(name string) ({{.enum.Name}}, error) {
         {{ if .desnakeOnParse -}}
         name = strings.ReplaceAll(name, "_", "")
         {{- end  }}
+        {{ if .emptyIsZero -}}
+        if name == "" {
+                return {{.enum.Name}}(0), nil
+        }
+        {{- end  }}
 	if x, ok := _{{.enum.Name}}Value[name]; ok {
 		return x, nil
 	}

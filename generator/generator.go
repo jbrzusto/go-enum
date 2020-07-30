@@ -41,6 +41,7 @@ type Generator struct {
 	needStringerMap bool
 	leaveSnakeCase  bool
 	desnakeOnParse  bool
+	emptyIsZero     bool
 	prefix          string
 }
 
@@ -138,6 +139,12 @@ func (g *Generator) WithDesnakeOnParse() *Generator {
 	return g
 }
 
+// WithEmptyIsZero is used to add flag methods to the enum
+func (g *Generator) WithEmptyIsZero() *Generator {
+	g.emptyIsZero = true
+	return g
+}
+
 // WithPrefix is used to add a custom prefix to the enum constants
 func (g *Generator) WithPrefix(prefix string) *Generator {
 	g.prefix = prefix
@@ -196,6 +203,7 @@ func (g *Generator) Generate(f *ast.File) ([]byte, error) {
 			"names":           g.names,
 			"needStringerMap": g.needStringerMap,
 			"desnakeOnParse":  g.desnakeOnParse,
+			"emptyIsZero":     g.emptyIsZero,
 		}
 
 		err = g.t.ExecuteTemplate(vBuff, "enum", data)
