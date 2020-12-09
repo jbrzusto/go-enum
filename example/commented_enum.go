@@ -21,16 +21,10 @@ const (
 
 const _CommentedName = "value1value2value3"
 
-var _CommentedMap = map[Commented]string{
-	0: _CommentedName[0:6],
-	1: _CommentedName[6:12],
-	2: _CommentedName[12:18],
-}
-
 // String implements the Stringer interface.
 func (x Commented) String() string {
-	if str, ok := _CommentedMap[x]; ok {
-		return str
+	if x >= 0 && int(x) < len(_CommentedNames) {
+		return _CommentedNames[x]
 	}
 	return fmt.Sprintf("Commented(%d)", x)
 }
@@ -46,6 +40,9 @@ var _CommentedValue = map[string]Commented{
 
 // ParseCommented attempts to convert a string to a Commented
 func ParseCommented(name string) (Commented, error) {
+
+	name = strings.ToLower(name)
+
 	if x, ok := _CommentedValue[name]; ok {
 		return x, nil
 	}
@@ -84,16 +81,10 @@ const (
 
 const _ComplexCommentedName = "value1value2value3"
 
-var _ComplexCommentedMap = map[ComplexCommented]string{
-	1: _ComplexCommentedName[0:6],
-	2: _ComplexCommentedName[6:12],
-	3: _ComplexCommentedName[12:18],
-}
-
 // String implements the Stringer interface.
 func (x ComplexCommented) String() string {
-	if str, ok := _ComplexCommentedMap[x]; ok {
-		return str
+	if x >= 0 && int(x) < len(_ComplexCommentedNames) {
+		return _ComplexCommentedNames[x]
 	}
 	return fmt.Sprintf("ComplexCommented(%d)", x)
 }
@@ -109,6 +100,9 @@ var _ComplexCommentedValue = map[string]ComplexCommented{
 
 // ParseComplexCommented attempts to convert a string to a ComplexCommented
 func ParseComplexCommented(name string) (ComplexCommented, error) {
+
+	name = strings.ToLower(name)
+
 	if x, ok := _ComplexCommentedValue[name]; ok {
 		return x, nil
 	}

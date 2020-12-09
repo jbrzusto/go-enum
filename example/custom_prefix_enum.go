@@ -18,16 +18,10 @@ const (
 
 const _ProductName = "AnvilDynamiteGlue"
 
-var _ProductMap = map[Product]string{
-	0: _ProductName[0:5],
-	1: _ProductName[5:13],
-	2: _ProductName[13:17],
-}
-
 // String implements the Stringer interface.
 func (x Product) String() string {
-	if str, ok := _ProductMap[x]; ok {
-		return str
+	if x >= 0 && int(x) < len(_ProductNames) {
+		return _ProductNames[x]
 	}
 	return fmt.Sprintf("Product(%d)", x)
 }
@@ -40,6 +34,7 @@ var _ProductValue = map[string]Product{
 
 // ParseProduct attempts to convert a string to a Product
 func ParseProduct(name string) (Product, error) {
+
 	if x, ok := _ProductValue[name]; ok {
 		return x, nil
 	}

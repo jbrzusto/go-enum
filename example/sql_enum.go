@@ -9,42 +9,27 @@ import (
 )
 
 const (
-	// ProjectStatusPending is a ProjectStatus of type Pending
-	ProjectStatusPending ProjectStatus = iota
-	// ProjectStatusInWork is a ProjectStatus of type InWork
-	ProjectStatusInWork
-	// ProjectStatusCompleted is a ProjectStatus of type Completed
-	ProjectStatusCompleted
-	// ProjectStatusRejected is a ProjectStatus of type Rejected
-	ProjectStatusRejected
+	// ProjectStatusPendingInWorkCompletedRejected is a ProjectStatus of type Pending, InWork, Completed, Rejected
+	ProjectStatusPendingInWorkCompletedRejected ProjectStatus = iota
 )
 
-const _ProjectStatusName = "pendinginWorkcompletedrejected"
-
-var _ProjectStatusMap = map[ProjectStatus]string{
-	0: _ProjectStatusName[0:7],
-	1: _ProjectStatusName[7:13],
-	2: _ProjectStatusName[13:22],
-	3: _ProjectStatusName[22:30],
-}
+const _ProjectStatusName = "pending, inWork, completed, rejected"
 
 // String implements the Stringer interface.
 func (x ProjectStatus) String() string {
-	if str, ok := _ProjectStatusMap[x]; ok {
-		return str
+	if x >= 0 && int(x) < len(_ProjectStatusNames) {
+		return _ProjectStatusNames[x]
 	}
 	return fmt.Sprintf("ProjectStatus(%d)", x)
 }
 
 var _ProjectStatusValue = map[string]ProjectStatus{
-	_ProjectStatusName[0:7]:   0,
-	_ProjectStatusName[7:13]:  1,
-	_ProjectStatusName[13:22]: 2,
-	_ProjectStatusName[22:30]: 3,
+	_ProjectStatusName[0:36]: 0,
 }
 
 // ParseProjectStatus attempts to convert a string to a ProjectStatus
 func ParseProjectStatus(name string) (ProjectStatus, error) {
+
 	if x, ok := _ProjectStatusValue[name]; ok {
 		return x, nil
 	}

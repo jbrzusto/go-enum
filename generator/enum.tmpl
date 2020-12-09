@@ -31,6 +31,9 @@ func Parse{{.enum.Name}}(name string) ({{.enum.Name}}, error) {
         {{ if .desnakeOnParse -}}
         name = strings.ReplaceAll(name, "_", "")
         {{- end  }}
+        {{ if .ignoreCase -}}
+        name = strings.ToLower(name)
+        {{- end  }}
         {{ if .emptyIsZero -}}
         if name == "" {
                 return {{.enum.Name}}(0), nil
@@ -147,5 +150,5 @@ func (x {{.enum.Name}}) String() string {
 	return fmt.Sprintf("{{.enum.Name}}(%d)", x)
 }
 {{ end }}
-var _{{.enum.Name}}Value = {{ unmapify .enum .lowercase }}
+var _{{.enum.Name}}Value = {{ unmapify .enum .ignoreCase }}
 {{end}}

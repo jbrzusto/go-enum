@@ -9,15 +9,11 @@ import (
 )
 
 const (
-	// ColorBlack is a Color of type Black
-	ColorBlack Color = iota
-	// ColorWhite is a Color of type White
-	ColorWhite
-	// ColorRed is a Color of type Red
-	ColorRed
+	// ColorBlackWhiteRed is a Color of type Black, White, Red
+	ColorBlackWhiteRed Color = iota
 	// ColorGreen is a Color of type Green
 	// Green starts with 33
-	ColorGreen Color = iota + 30
+	ColorGreen Color = iota + 32
 	// ColorBlue is a Color of type Blue
 	ColorBlue
 	// ColorGrey is a Color of type Grey
@@ -34,20 +30,18 @@ const (
 	ColorRedOrangeBlue
 )
 
-const _ColorName = "BlackWhiteRedGreenBluegreyyellowblue-greenred-orangeyellow_greenred-orange-blue"
+const _ColorName = "Black, White, RedGreenBluegreyyellowblue-greenred-orangeyellow_greenred-orange-blue"
 
 var _ColorMap = map[Color]string{
-	0:  _ColorName[0:5],
-	1:  _ColorName[5:10],
-	2:  _ColorName[10:13],
-	33: _ColorName[13:18],
-	34: _ColorName[18:22],
-	35: _ColorName[22:26],
-	36: _ColorName[26:32],
-	37: _ColorName[32:42],
-	38: _ColorName[42:52],
-	39: _ColorName[52:64],
-	40: _ColorName[64:79],
+	0:  _ColorName[0:17],
+	33: _ColorName[17:22],
+	34: _ColorName[22:26],
+	35: _ColorName[26:30],
+	36: _ColorName[30:36],
+	37: _ColorName[36:46],
+	38: _ColorName[46:56],
+	39: _ColorName[56:68],
+	40: _ColorName[68:83],
 }
 
 // String implements the Stringer interface.
@@ -59,32 +53,31 @@ func (x Color) String() string {
 }
 
 var _ColorValue = map[string]Color{
-	_ColorName[0:5]:                    0,
-	strings.ToLower(_ColorName[0:5]):   0,
-	_ColorName[5:10]:                   1,
-	strings.ToLower(_ColorName[5:10]):  1,
-	_ColorName[10:13]:                  2,
-	strings.ToLower(_ColorName[10:13]): 2,
-	_ColorName[13:18]:                  33,
-	strings.ToLower(_ColorName[13:18]): 33,
-	_ColorName[18:22]:                  34,
-	strings.ToLower(_ColorName[18:22]): 34,
-	_ColorName[22:26]:                  35,
-	strings.ToLower(_ColorName[22:26]): 35,
-	_ColorName[26:32]:                  36,
-	strings.ToLower(_ColorName[26:32]): 36,
-	_ColorName[32:42]:                  37,
-	strings.ToLower(_ColorName[32:42]): 37,
-	_ColorName[42:52]:                  38,
-	strings.ToLower(_ColorName[42:52]): 38,
-	_ColorName[52:64]:                  39,
-	strings.ToLower(_ColorName[52:64]): 39,
-	_ColorName[64:79]:                  40,
-	strings.ToLower(_ColorName[64:79]): 40,
+	_ColorName[0:17]:                   0,
+	strings.ToLower(_ColorName[0:17]):  0,
+	_ColorName[17:22]:                  33,
+	strings.ToLower(_ColorName[17:22]): 33,
+	_ColorName[22:26]:                  34,
+	strings.ToLower(_ColorName[22:26]): 34,
+	_ColorName[26:30]:                  35,
+	strings.ToLower(_ColorName[26:30]): 35,
+	_ColorName[30:36]:                  36,
+	strings.ToLower(_ColorName[30:36]): 36,
+	_ColorName[36:46]:                  37,
+	strings.ToLower(_ColorName[36:46]): 37,
+	_ColorName[46:56]:                  38,
+	strings.ToLower(_ColorName[46:56]): 38,
+	_ColorName[56:68]:                  39,
+	strings.ToLower(_ColorName[56:68]): 39,
+	_ColorName[68:83]:                  40,
+	strings.ToLower(_ColorName[68:83]): 40,
 }
 
 // ParseColor attempts to convert a string to a Color
 func ParseColor(name string) (Color, error) {
+
+	name = strings.ToLower(name)
+
 	if x, ok := _ColorValue[name]; ok {
 		return x, nil
 	}

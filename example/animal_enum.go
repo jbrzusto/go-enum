@@ -18,16 +18,10 @@ const (
 
 const _AnimalName = "CatDogFish"
 
-var _AnimalMap = map[Animal]string{
-	0: _AnimalName[0:3],
-	1: _AnimalName[3:6],
-	2: _AnimalName[6:10],
-}
-
 // String implements the Stringer interface.
 func (x Animal) String() string {
-	if str, ok := _AnimalMap[x]; ok {
-		return str
+	if x >= 0 && int(x) < len(_AnimalNames) {
+		return _AnimalNames[x]
 	}
 	return fmt.Sprintf("Animal(%d)", x)
 }
@@ -40,6 +34,7 @@ var _AnimalValue = map[string]Animal{
 
 // ParseAnimal attempts to convert a string to a Animal
 func ParseAnimal(name string) (Animal, error) {
+
 	if x, ok := _AnimalValue[name]; ok {
 		return x, nil
 	}

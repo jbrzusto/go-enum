@@ -33,7 +33,7 @@ type Generator struct {
 	knownTemplates  map[string]*template.Template
 	fileSet         *token.FileSet
 	noPrefix        bool
-	lowercaseLookup bool
+	ignoreCase      bool
 	marshal         bool
 	sql             bool
 	flag            bool
@@ -97,9 +97,9 @@ func (g *Generator) WithNoPrefix() *Generator {
 	return g
 }
 
-// WithLowercaseVariant is used to change the enum const values generated to not have the enum on them.
-func (g *Generator) WithLowercaseVariant() *Generator {
-	g.lowercaseLookup = true
+// WithIgnoreCase is used to ignore case when parsing enum values.
+func (g *Generator) WithIgnoreCase() *Generator {
+	g.ignoreCase = true
 	return g
 }
 
@@ -196,7 +196,7 @@ func (g *Generator) Generate(f *ast.File) ([]byte, error) {
 		data := map[string]interface{}{
 			"enum":            enum,
 			"name":            name,
-			"lowercase":       g.lowercaseLookup,
+			"ignoreCase":      g.ignoreCase,
 			"marshal":         g.marshal,
 			"sql":             g.sql,
 			"flag":            g.flag,

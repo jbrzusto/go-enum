@@ -24,7 +24,7 @@ Options:
   -h, --help       display help information
   -f, --file      *The file(s) to generate enums.  Use more than one flag for more files.
       --noprefix   Prevents the constants generated from having the Enum as a prefix.
-      --lower      Adds lowercase variants of the enum strings for lookup.
+      --ignoreCase Ignore case when parsing enum strings.
       --marshal    Adds text (and inherently json) marshalling functions.
       --sql        Adds SQL database scan and value functions.
       --flag       Adds golang flag functions.
